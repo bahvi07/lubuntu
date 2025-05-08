@@ -12,11 +12,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $occupation = isset($_POST['occupation']) ? trim($_POST['occupation']) : '';
     $contact = isset($_POST['contact']) ? trim($_POST['contact']) : '';
     $email = isset($_POST['email']) ? trim($_POST['email']) : '';
-    $house_no = isset($_POST['house_no']) ? trim($_POST['house_no']) : '';
-    $street = isset($_POST['street']) ? trim($_POST['street']) : '';
-
-    $ward = isset($_POST['ward-no']) ? trim($_POST['ward-no']) : '';
-    $address = isset($_POST['address']) ? trim($_POST['address']) : '';
+    $panchayat = isset($_POST['panchayat']) ? trim($_POST['panchayat']) : '';
+    $gram = isset($_POST['grampanchayat']) ? trim($_POST['grampanchayat']) : '';
+    $tehsil = isset($_POST['tehsil']) ? trim($_POST['tehsil']) : '';
+    $district = isset($_POST['district']) ? trim($_POST['district']) : '';
     $docType = isset($_POST['document-type']) ? trim($_POST['document-type']) : '';
     $docNumber = isset($_POST['document-number']) ? trim($_POST['document-number']) : '';
     $doc = isset($_FILES['document-file']) ? $_FILES['document-file'] : null;
@@ -43,13 +42,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errors['email'] = "Invalid email format.";
     }
-    if (empty($street)) $errors['street'] = "Street is required.";
-    if (empty($ward)) {
-        $errors['ward-no'] = "Ward number is required.";
-    } elseif (!preg_match('/^[0-9]+$/', $ward)) {
-        $errors['ward-no'] = "Ward number must be a number.";
+    if (empty($panchayat)) $errors['panchayat'] = "panchayat is required.";
+    if (empty($gram)) {
+        $errors['grampanchayat'] = "grampanchayat is required.";
     }
-    if (empty($address)) $errors['address'] = "Address is required.";
+    if (empty($tehsil)) $errors['tehsil'] = "tehsil is required.";
+    if (empty($district)) $errors['district'] = "district is required.";
     if (empty($docType)) $errors['document-type'] = "Document type is required.";
     if (empty($docNumber)) {
         $errors['document-number'] = "Document number is required.";
@@ -100,11 +98,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Insert into Database
     if (empty($errors)) {
-        $stmt = $conn->prepare("INSERT INTO users (first_name, middle_name, last_name, father_name, gender, dob, blood_group, occupation, contact_number, email, house_number, street, ward_number, full_address, document_type, document_number, document_path) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        $stmt = $conn->prepare("INSERT INTO users (first_name, middle_name, last_name, father_name, gender, dob, blood_group, occupation, contact_number, email, panchayat, gram, tehsil,district, document_type, document_number, document_path) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
         $stmt->bind_param("sssssssssssssssss", 
         $fname, $mname, $lname, $father_name, $gender, $dob, $blood_group,
-        $occupation, $contact, $email, $house_no, $street, $ward,
-        $address, $docType, $docNumber, $imagePath
+        $occupation, $contact, $email, $panchayat, $gram, $tehsil,
+        $district, $docType, $docNumber, $imagePath
     );
     
         $stmt->execute();
