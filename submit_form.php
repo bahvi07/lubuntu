@@ -14,8 +14,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = isset($_POST['email']) ? trim($_POST['email']) : '';
     $panchayat = isset($_POST['panchayat']) ? trim($_POST['panchayat']) : '';
     $gram = isset($_POST['grampanchayat']) ? trim($_POST['grampanchayat']) : '';
+    $pincode=isset($_POST['pincode']) ? trim($_POST['pincode']) : '';
     $tehsil = isset($_POST['tehsil']) ? trim($_POST['tehsil']) : '';
     $district = isset($_POST['district']) ? trim($_POST['district']) : '';
+    $state = isset($_POST['state']) ? trim($_POST['state']) : '';
     $docType = isset($_POST['document-type']) ? trim($_POST['document-type']) : '';
     $docNumber = isset($_POST['document-number']) ? trim($_POST['document-number']) : '';
     $doc = isset($_FILES['document-file']) ? $_FILES['document-file'] : null;
@@ -46,8 +48,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (empty($gram)) {
         $errors['grampanchayat'] = "grampanchayat is required.";
     }
+    if (empty($pincode)) {
+        $errors['pincode'] = "Pincode is required.";
+    } elseif (!preg_match('/^[0-9]{6}$/', $pincode)) {
+        $errors['pincode'] = "Pincode must be 6 digits.";
+    }
     if (empty($tehsil)) $errors['tehsil'] = "tehsil is required.";
     if (empty($district)) $errors['district'] = "district is required.";
+    if (empty($state)) $errors['state'] = "state is required.";
     if (empty($docType)) $errors['document-type'] = "Document type is required.";
     if (empty($docNumber)) {
         $errors['document-number'] = "Document number is required.";
@@ -98,11 +106,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Insert into Database
     if (empty($errors)) {
-        $stmt = $conn->prepare("INSERT INTO users (first_name, middle_name, last_name, father_name, gender, dob, blood_group, occupation, contact_number, email, panchayat, gram, tehsil,district, document_type, document_number, document_path) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-        $stmt->bind_param("sssssssssssssssss", 
+        $stmt = $conn->prepare("INSERT INTO users (first_name, middle_name, last_name, father_name, gender, dob, blood_group, occupation, contact_number, email, panchayat, gram,pincode, tehsil,district,state, document_type, document_number, document_path) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        $stmt->bind_param("sssssssssssssssssss", 
         $fname, $mname, $lname, $father_name, $gender, $dob, $blood_group,
-        $occupation, $contact, $email, $panchayat, $gram, $tehsil,
-        $district, $docType, $docNumber, $imagePath
+        $occupation, $contact, $email, $panchayat, $gram,$pincode, $tehsil,
+        $district,$state, $docType, $docNumber, $imagePath
     );
     
         $stmt->execute();

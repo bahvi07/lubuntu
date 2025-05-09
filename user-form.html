@@ -4,11 +4,61 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>User Registration</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist/cyborg/bootstrap.min.css" rel="stylesheet">
+
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<link rel="stylesheet" href="form-style.css">
+
   <style>
+body {
+  background-color: #060606;
+  color: #fff;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.container {
+  max-width: 900px;
+  background-color: #1b1e21;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+  margin-top: 40px;
+  color: #fff;
+}
+
+legend {
+  font-size: 1.25rem;
+  color: #00bc8c;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #00bc8c;
+  margin-bottom: 1rem;
+}
+
+fieldset {
+  margin-bottom: 2rem;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="date"],
+select,
+.form-control,
+.form-select {
+  background-color: #2a2f32;
+  color: #fff;
+  border-color: #495057;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
 
   </style>
 </head>
@@ -97,21 +147,29 @@
             <label for="email" class="form-label">Email Address</label>
             <input type="email" class="form-control" id="email" name="email" placeholder="Enter Email" required>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-4">
             <label for="panchayat" class="form-label">Panchayat</label>
             <input type="text" class="form-control" id="panchayat" name="panchayat" placeholder="Enter panchayat">
           </div>
-          <div class="col-md-3">
-            <label for="gram" class="form-label">Gram Panchayat</label>
-            <input type="text" class="form-control" id="gram"  name="grampanchayat" placeholder="Enter gram-panchayat" required>
+          <div class="col-md-4">
+            <label for="gram" class="form-label">City</label>
+            <input type="text" class="form-control" id="gram"  name="grampanchayat" placeholder="Enter City" required>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-4">
+            <label for="pin" class="form-label">Pin Code</label>
+            <input type="number" class="form-control" id="pincode" placeholder="Enter Pin Code" name="pincode" required>
+          </div>
+          <div class="col-md-4">
             <label for="tehsil" class="form-label">Tehsil</label>
             <input type="text" class="form-control" id="tehsil" placeholder="Enter tehsil" name="tehsil" required>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-4">
             <label for="district" class="form-label">District</label>
             <input type="text" class="form-control" id="district" name="district" placeholder="Enter District" required>
+          </div>
+          <div class="col-md-4">
+            <label for="state" class="form-label">State</label>
+            <input type="text" class="form-control" id="state" name="state" placeholder="Enter State" required>
           </div>
         </div>
       </fieldset>
@@ -147,9 +205,55 @@
     </form>
   </div>
 <a href="download.php" class="btn btn-outline-success">Click to download</a>
-  <script src="form-script.js">
-   
-  </script>
+ <script>
+  // Document toggle logic
+$('#document-type').on('change', function () {
+  if (this.value === 'Aadhar') {
+    $('#aadhar-number').show().attr('required', true);
+    $('#license-number').hide().removeAttr('required');
+  } else if (this.value === 'Driving-License') {
+    $('#license-number').show().attr('required', true);
+    $('#aadhar-number').hide().removeAttr('required');
+  } else {
+    $('#license-number, #aadhar-number').hide().removeAttr('required');
+  }
+}).trigger('change');
 
+// Fetching pin details
+document.getElementById("pincode").addEventListener("blur", function () {
+  const pin = this.value.trim();
+  if (pin.length === 6 && /^\d+$/.test(pin)) {
+    fetch("https://api.postalpincode.in/pincode/" + pin)
+      .then(res => res.json())
+      .then(data => {
+        if (data[0].Status === "Success") {
+          const po = data[0].PostOffice[0];
+          document.getElementById("district").value = po.District || "N/A";
+          document.getElementById("tehsil").value = po.Block || "N/A";
+          document.getElementById("state").value = po.State || "N/A";
+          console.log(data);
+        } else {
+          alert("Invalid PIN code entered.");
+          clearFields();
+        }
+      })
+      .catch(err => {
+        console.error("Error fetching location data:", err);
+        alert("Could not fetch location details.");
+        clearFields();
+      });
+  } else {
+    alert("Please enter a valid 6-digit PIN code.");
+    clearFields();
+  }
+});
+
+function clearFields() {
+  document.getElementById("district").value = "";
+  document.getElementById("tehsil").value = "";
+  document.getElementById("state").value = "";
+}
+
+ </script>
 </body>
 </html>
