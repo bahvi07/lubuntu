@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $contact = isset($_POST['contact']) ? trim($_POST['contact']) : '';
     $email = isset($_POST['email']) ? trim($_POST['email']) : '';
     $panchayat = isset($_POST['panchayat']) ? trim($_POST['panchayat']) : '';
-    $gram = isset($_POST['grampanchayat']) ? trim($_POST['grampanchayat']) : '';
+    $city = isset($_POST['city']) ? trim($_POST['city']) : '';
     $pincode=isset($_POST['pincode']) ? trim($_POST['pincode']) : '';
     $tehsil = isset($_POST['tehsil']) ? trim($_POST['tehsil']) : '';
     $district = isset($_POST['district']) ? trim($_POST['district']) : '';
@@ -45,8 +45,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors['email'] = "Invalid email format.";
     }
     if (empty($panchayat)) $errors['panchayat'] = "panchayat is required.";
-    if (empty($gram)) {
-        $errors['grampanchayat'] = "grampanchayat is required.";
+    if (empty($city)) {
+        $errors['city'] = "city is required.";
     }
     if (empty($pincode)) {
         $errors['pincode'] = "Pincode is required.";
@@ -106,10 +106,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Insert into Database
     if (empty($errors)) {
-        $stmt = $conn->prepare("INSERT INTO users (first_name, middle_name, last_name, father_name, gender, dob, blood_group, occupation, contact_number, email, panchayat, gram,pincode, tehsil,district,state, document_type, document_number, document_path) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        $stmt = $conn->prepare("INSERT INTO users (first_name, middle_name, last_name, father_name, gender, dob, blood_group, occupation, contact_number, email, panchayat, city,pincode, tehsil,district,state, document_type, document_number, document_path) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
         $stmt->bind_param("sssssssssssssssssss", 
         $fname, $mname, $lname, $father_name, $gender, $dob, $blood_group,
-        $occupation, $contact, $email, $panchayat, $gram,$pincode, $tehsil,
+        $occupation, $contact, $email, $panchayat, $city,$pincode, $tehsil,
         $district,$state, $docType, $docNumber, $imagePath
     );
     

@@ -11,7 +11,7 @@ $output = fopen('php://output', 'w');
 fputcsv($output, [
     'ID', 'First Name', 'Middle Name', 'Last Name', "Father's Name", 'Gender',
     'DOB', 'Blood Group', 'Occupation', 'Contact Number', 'Email',
-    'House Number', 'Street', 'Ward Number', 'Full Address',
+    'Panchayat', 'City/Village', 'Pin Code', 'Tehsil','District','State',
     'Document Type', 'Document Number', 'Document Path',
     'Created At', 'Updated At'
 ]);
@@ -39,10 +39,12 @@ while ($row = mysqli_fetch_assoc($result)) {
         $row['occupation'] ?: 'N/A',
         $row['contact_number'] ?: 'N/A',
         $row['email'] ?: 'N/A',
-        $row['house_number'] ?: 'N/A',
-        $row['street'] ?: 'N/A',
-        $row['ward_number'] ?: 'N/A',
-        $row['full_address'] ?: 'N/A',
+        $row['panchayat'] ?: 'N/A',
+        $row['city'] ?: 'N/A',
+        $row['pincode'] ?: 'N/A',
+        $row['tehsil'] ?: 'N/A',
+        $row['district'] ?: 'N/A',
+        $row['state'] ?: 'N/A',
         $row['document_type'] ?: 'N/A',
         $row['document_number'] ?: 'N/A',
         $row['document_path'] ?: 'N/A',
