@@ -116,8 +116,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->execute();
 
         if ($stmt->affected_rows > 0) {
-            echo "Form submitted successfully.";
-        header("Location: user-form.html");
+            echo "<script>
+                alert('Form submitted successfully.');
+                window.location.href = 'user-form.html';
+            </script>";
             exit;
         } else {
             echo "Error submitting form: " . $stmt->error;
